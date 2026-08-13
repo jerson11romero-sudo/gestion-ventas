@@ -587,6 +587,21 @@ document
         mostrarVentas
     );
 
+document
+    .getElementById("btnCerrarSesion")
+    .addEventListener(
+        "click",
+        async function() {
+
+            await supabaseClient
+                .auth
+                .signOut();
+
+            window.location.href =
+                "login.html";
+
+        }
+    );
 
 // ========================================
 // INICIAR
