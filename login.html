@@ -5,20 +5,15 @@
 
     <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Iniciar sesión - JYA IMPORT ELECTRO</title>
+    <title>Login - JYA IMPORT ELECTRO</title>
 
     <link rel="stylesheet" href="style.css">
 
 </head>
 
-
 <body>
-
 
 <header>
 
@@ -35,21 +30,16 @@
 
 <main class="container">
 
-
     <section class="card login-card">
-
 
         <h2>Iniciar sesión</h2>
 
 
         <form id="loginForm">
 
-
             <div>
 
-                <label>
-                    Correo electrónico
-                </label>
+                <label>Correo electrónico</label>
 
                 <input
                     type="email"
@@ -63,9 +53,7 @@
 
             <div>
 
-                <label>
-                    Contraseña
-                </label>
+                <label>Contraseña</label>
 
                 <input
                     type="password"
@@ -81,36 +69,34 @@
                 type="submit"
                 class="btn">
 
-                Ingresar
+                INGRESAR
 
             </button>
-
 
         </form>
 
 
         <p
             id="loginError"
-            style="color:red; margin-top:15px;">
+            style="
+                margin-top:20px;
+                text-align:center;
+                font-weight:bold;
+            ">
         </p>
-
 
     </section>
 
-
 </main>
 
-
-<!-- SUPABASE -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 
 <script>
 
-// ========================================
-// SUPABASE
-// ========================================
+console.log("1. JavaScript cargado");
+
 
 const SUPABASE_URL =
     "https://labgklmijzytxzjsrwxe.supabase.co";
@@ -120,6 +106,9 @@ const SUPABASE_KEY =
     "sb_publishable_4XzzjrO_JNsDjIiD0ttSBg_QcmkbiuN";
 
 
+console.log("2. URL:", SUPABASE_URL);
+
+
 const supabaseClient =
     window.supabase.createClient(
         SUPABASE_URL,
@@ -127,9 +116,8 @@ const supabaseClient =
     );
 
 
-// ========================================
-// ELEMENTOS
-// ========================================
+console.log("3. Supabase conectado");
+
 
 const loginForm =
     document.getElementById("loginForm");
@@ -139,19 +127,13 @@ const loginError =
     document.getElementById("loginError");
 
 
-// ========================================
-// LOGIN
-// ========================================
-
 loginForm.addEventListener(
     "submit",
     async function(e) {
 
         e.preventDefault();
 
-
-        loginError.textContent =
-            "Iniciando sesión...";
+        console.log("4. BOTÓN INGRESAR PRESIONADO");
 
 
         const email =
@@ -167,7 +149,19 @@ loginForm.addEventListener(
                 .value;
 
 
-        console.log("Correo:", email);
+        console.log(
+            "5. Correo:",
+            email
+        );
+
+
+        console.log(
+            "6. Intentando conectar con Supabase..."
+        );
+
+
+        loginError.textContent =
+            "⏳ Conectando...";
 
 
         const {
@@ -185,35 +179,61 @@ loginForm.addEventListener(
                 });
 
 
+        console.log(
+            "7. RESPUESTA SUPABASE"
+        );
+
+
+        console.log(
+            "DATA:",
+            data
+        );
+
+
+        console.log(
+            "ERROR:",
+            error
+        );
+
+
         if (error) {
-
-            console.error(
-                "ERROR SUPABASE:",
-                error
-            );
-
 
             loginError.textContent =
                 "❌ " + error.message;
-
 
             return;
 
         }
 
 
-        console.log(
-            "LOGIN CORRECTO:",
-            data
-        );
+        if (!data.session) {
+
+            loginError.textContent =
+                "❌ No se creó la sesión.";
+
+            return;
+
+        }
 
 
         loginError.textContent =
-            "✅ Acceso correcto";
+            "✅ LOGIN CORRECTO";
 
 
-        window.location.href =
-            "index.html";
+        console.log(
+            "8. SESIÓN CORRECTA"
+        );
+
+
+        setTimeout(
+            function() {
+
+                window.location.href =
+                    "index.html";
+
+            },
+            1000
+        );
 
     }
 
