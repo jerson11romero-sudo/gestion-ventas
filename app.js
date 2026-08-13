@@ -7,7 +7,7 @@ const supabaseClient = window.supabase.createClient(
     SUPABASE_KEY
 );
 
-let ventas = JSON.parse(localStorage.getItem("ventas")) || [];
+let ventas =  [];
 
 const formulario = document.getElementById("ventaForm");
 
@@ -74,10 +74,7 @@ formulario.addEventListener("submit", function(e) {
 
 function guardarVentas() {
 
-    localStorage.setItem(
-        "ventas",
-        JSON.stringify(ventas)
-    );
+
 
 }
 
