@@ -1,3 +1,12 @@
+const SUPABASE_URL = "https://labgklmijzytxzjsrwxe.supabase.co/rest/v1/";
+
+const SUPABASE_KEY = "sb_publishable_4XzzjrO_JNsDjIiD0ttSBg_QcmkbiuN";
+
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
 let ventas = JSON.parse(localStorage.getItem("ventas")) || [];
 
 const formulario = document.getElementById("ventaForm");
