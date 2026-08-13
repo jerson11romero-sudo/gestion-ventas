@@ -1,513 +1,529 @@
- <!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="es">
 
 <head>
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <title>JYA IMPORT ELECTRO - Ventas</title>
+    <title>JYA IMPORT ELECTRO - Gestión de Ventas</title>
 
     <link rel="stylesheet" href="style.css">
 
 </head>
 
+
 <body>
-
-
-<!-- =========================
-     LOGIN
-========================= -->
-
-<div id="loginScreen" class="login-container">
-
-    <div class="login-card">
-
-        <h1>JYA IMPORT ELECTRO</h1>
-
-        <p>Gestión de ventas</p>
-
-        <form id="loginForm">
-
-            <label>Correo electrónico</label>
-
-            <input
-                type="email"
-                id="loginEmail"
-                placeholder="correo@ejemplo.com"
-                required
-            >
-
-            <label>Contraseña</label>
-
-            <input
-                type="password"
-                id="loginPassword"
-                placeholder="Contraseña"
-                required
-            >
-
-            <button type="submit" class="btn">
-                Iniciar sesión
-            </button>
-
-        </form>
-
-        <p id="loginError"
-           style="color:red; margin-top:15px;">
-        </p>
-
-    </div>
-
-</div>
-
 
 
 <!-- =========================
      APLICACIÓN
 ========================= -->
 
-<div id="appScreen" style="display:none;">
+<div id="appScreen">
 
 
-<header>
+    <!-- =========================
+         HEADER
+    ========================= -->
 
-    <div class="logo">
+    <header class="topbar">
 
-        <h1>JYA IMPORT ELECTRO</h1>
+        <div class="brand">
 
-        <p>Gestión de Ventas</p>
-
-    </div>
-
-
-    <button
-        id="btnCerrarSesion"
-        class="btn-eliminar">
-
-        Cerrar sesión
-
-    </button>
-
-</header>
-
-
-
-<main class="container">
-
-
-<section class="card">
-
-    <h2>Registrar venta</h2>
-
-
-    <form id="ventaForm">
-
-
-        <div class="grid">
-
+            <div class="brand-icon">
+                J
+            </div>
 
             <div>
 
-                <label>
-                    Número de cliente
-                </label>
+                <h1>JYA IMPORT ELECTRO</h1>
 
-                <input
-                    type="text"
-                    id="numeroCliente"
-                    placeholder="Ej: C-0001"
-                    required
-                >
+                <p>Panel de gestión de ventas</p>
 
             </div>
-
-
-
-            <div>
-
-                <label>
-                    Nombre del cliente
-                </label>
-
-                <input
-                    type="text"
-                    id="nombreCliente"
-                    placeholder="Nombre completo"
-                    required
-                >
-
-            </div>
-
-
-
-            <div>
-
-                <label>
-                    Celular
-                </label>
-
-                <input
-                    type="tel"
-                    id="celular"
-                    placeholder="999999999"
-                >
-
-            </div>
-
-
-
-            <div>
-
-                <label>
-                    Tipo de destino
-                </label>
-
-                <select
-                    id="destinoTipo"
-                    required>
-
-                    <option value="">
-                        Seleccionar
-                    </option>
-
-                    <option value="Lima">
-                        Lima
-                    </option>
-
-                    <option value="Provincia">
-                        Provincia
-                    </option>
-
-                </select>
-
-            </div>
-
-
-
-            <div>
-
-                <label>
-                    Destino
-                </label>
-
-                <input
-                    type="text"
-                    id="destino"
-                    placeholder="Ej: Piura"
-                    required
-                >
-
-            </div>
-
-
-
-            <div>
-
-                <label>
-                    Producto
-                </label>
-
-                <input
-                    type="text"
-                    id="producto"
-                    placeholder="Ej: Wahl Magic Clip"
-                    required
-                >
-
-            </div>
-
-
-
-            <div>
-
-                <label>
-                    Cantidad
-                </label>
-
-                <input
-                    type="number"
-                    id="cantidad"
-                    min="1"
-                    value="1"
-                    required
-                >
-
-            </div>
-
-
-
-            <div>
-
-                <label>
-                    Monto pagado
-                </label>
-
-                <input
-                    type="number"
-                    id="monto"
-                    step="0.01"
-                    placeholder="0.00"
-                    required
-                >
-
-            </div>
-
-
-
-            <div>
-
-                <label>
-                    Método de pago
-                </label>
-
-                <select
-                    id="metodoPago"
-                    required>
-
-                    <option value="">
-                        Seleccionar
-                    </option>
-
-                    <option value="Yape">
-                        Yape
-                    </option>
-
-                    <option value="Plin">
-                        Plin
-                    </option>
-
-                    <option value="Transferencia">
-                        Transferencia
-                    </option>
-
-                    <option value="Efectivo">
-                        Efectivo
-                    </option>
-
-                </select>
-
-            </div>
-
-
-
-            <div>
-
-                <label>
-                    Nombre del Yape
-                </label>
-
-                <input
-                    type="text"
-                    id="nombreYape"
-                    placeholder="Nombre que aparece en Yape"
-                >
-
-            </div>
-
 
         </div>
 
 
-
-        <label>
-            Observaciones
-        </label>
-
-        <textarea
-            id="observaciones"
-            placeholder="Ej: Enviar por Shalom..."
-        ></textarea>
-
-
-
         <button
-            type="submit"
-            class="btn">
+            id="btnCerrarSesion"
+            class="btn-logout">
 
-            Registrar venta
+            Cerrar sesión
 
         </button>
 
-
-    </form>
-
-</section>
+    </header>
 
 
+    <!-- =========================
+         CONTENIDO
+    ========================= -->
 
-<!-- =========================
-     RESUMEN
-========================= -->
-
-<section class="resumen">
+    <main class="dashboard">
 
 
-<div class="stat">
+        <!-- =========================
+             ESTADÍSTICAS
+        ========================= -->
 
-    <span>
-        Total ventas
-    </span>
+        <section class="stats-grid">
 
-    <strong id="totalVentas">
-        0
-    </strong>
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    🛒
+                </div>
+
+                <div>
+
+                    <span>Total ventas</span>
+
+                    <strong id="totalVentas">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    💰
+                </div>
+
+                <div>
+
+                    <span>Total recaudado</span>
+
+                    <strong>
+                        S/
+                        <span id="totalDinero">
+                            0.00
+                        </span>
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    🏙️
+                </div>
+
+                <div>
+
+                    <span>Pedidos Lima</span>
+
+                    <strong id="totalLima">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    🚚
+                </div>
+
+                <div>
+
+                    <span>Provincias</span>
+
+                    <strong id="totalProvincia">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =========================
+             REGISTRAR VENTA
+        ========================= -->
+
+        <section class="panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h2>Registrar nueva venta</h2>
+
+                    <p>
+                        Ingresa los datos del cliente y pedido
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <form id="ventaForm">
+
+
+                <div class="form-grid">
+
+
+                    <!-- CLIENTE -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Número de cliente
+                        </label>
+
+                        <input
+                            type="text"
+                            id="numeroCliente"
+                            placeholder="Ej: C-0001"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Nombre del cliente
+                        </label>
+
+                        <input
+                            type="text"
+                            id="nombreCliente"
+                            placeholder="Nombre completo"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Celular
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="celular"
+                            placeholder="999 999 999"
+                        >
+
+                    </div>
+
+
+                    <!-- DESTINO -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Tipo de destino
+                        </label>
+
+                        <select
+                            id="destinoTipo"
+                            required
+                        >
+
+                            <option value="">
+                                Seleccionar
+                            </option>
+
+                            <option value="Lima">
+                                Lima
+                            </option>
+
+                            <option value="Provincia">
+                                Provincia
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Destino / Agencia
+                        </label>
+
+                        <input
+                            type="text"
+                            id="destino"
+                            placeholder="Ej: Shalom Piura"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- PRODUCTO -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Producto
+                        </label>
+
+                        <input
+                            type="text"
+                            id="producto"
+                            placeholder="Ej: Wahl Magic Clip"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Cantidad
+                        </label>
+
+                        <input
+                            type="number"
+                            id="cantidad"
+                            min="1"
+                            value="1"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- PAGO -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Monto pagado
+                        </label>
+
+                        <input
+                            type="number"
+                            id="monto"
+                            min="0"
+                            step="0.01"
+                            placeholder="0.00"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Método de pago
+                        </label>
+
+                        <select
+                            id="metodoPago"
+                            required
+                        >
+
+                            <option value="">
+                                Seleccionar
+                            </option>
+
+                            <option value="Yape">
+                                Yape
+                            </option>
+
+                            <option value="Plin">
+                                Plin
+                            </option>
+
+                            <option value="Transferencia">
+                                Transferencia
+                            </option>
+
+                            <option value="Efectivo">
+                                Efectivo
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Nombre de Yape
+                        </label>
+
+                        <input
+                            type="text"
+                            id="nombreYape"
+                            placeholder="Nombre que aparece en Yape"
+                        >
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- OBSERVACIONES -->
+
+                <div class="form-group full">
+
+                    <label>
+                        Observaciones
+                    </label>
+
+                    <textarea
+                        id="observaciones"
+                        placeholder="Ej: Enviar por Shalom, agencia Puente Piedra..."
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-actions">
+
+                    <button
+                        type="reset"
+                        class="btn-secondary">
+
+                        Limpiar
+
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="btn-primary">
+
+                        + Registrar venta
+
+                    </button>
+
+                </div>
+
+
+            </form>
+
+        </section>
+
+
+
+        <!-- =========================
+             VENTAS
+        ========================= -->
+
+        <section class="panel">
+
+
+            <div class="panel-header sales-header">
+
+                <div>
+
+                    <h2>Ventas registradas</h2>
+
+                    <p>
+                        Consulta y administra tus pedidos
+                    </p>
+
+                </div>
+
+
+                <input
+                    type="text"
+                    id="buscar"
+                    class="search"
+                    placeholder="🔎 Buscar cliente, producto..."
+                >
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Cliente</th>
+
+                            <th>Nombre</th>
+
+                            <th>Destino</th>
+
+                            <th>Producto</th>
+
+                            <th>Pago</th>
+
+                            <th>Yape</th>
+
+                            <th>Monto</th>
+
+                            <th>Fecha</th>
+
+                            <th>Acciones</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="tablaVentas">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
 
 </div>
 
 
 
-<div class="stat">
+<!-- SUPABASE -->
 
-    <span>
-        Total recaudado
-    </span>
-
-    <strong>
-        S/
-        <span id="totalDinero">
-            0.00
-        </span>
-    </strong>
-
-</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 
+<!-- HTML2PDF -->
 
-<div class="stat">
-
-    <span>
-        Lima
-    </span>
-
-    <strong id="totalLima">
-        0
-    </strong>
-
-</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 
-
-<div class="stat">
-
-    <span>
-        Provincia
-    </span>
-
-    <strong id="totalProvincia">
-        0
-    </strong>
-
-</div>
-
-
-</section>
-
-
-
-<!-- =========================
-     TABLA
-========================= -->
-
-<section class="card">
-
-
-<div class="tabla-header">
-
-    <h2>
-        Ventas registradas
-    </h2>
-
-
-    <input
-        type="text"
-        id="buscar"
-        placeholder="🔎 Buscar..."
-    >
-
-</div>
-
-
-
-<div class="tabla-container">
-
-
-<table>
-
-<thead>
-
-<tr>
-
-<th>
-Cliente
-</th>
-
-<th>
-Nombre
-</th>
-
-<th>
-Destino
-</th>
-
-<th>
-Producto
-</th>
-
-<th>
-Pago
-</th>
-
-<th>
-Yape
-</th>
-
-<th>
-Monto
-</th>
-
-<th>
-Fecha
-</th>
-
-<th>
-Acciones
-</th>
-
-</tr>
-
-</thead>
-
-
-
-<tbody id="tablaVentas">
-
-</tbody>
-
-
-</table>
-
-
-</div>
-
-
-</section>
-
-
-</main>
-
-</div>
-<button
-    id="btnCerrarSesion"
-    class="btn-eliminar">
-
-    Cerrar sesión
-
-</button>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
-</script>
+<!-- APP -->
 
 <script src="app.js"></script>
 
