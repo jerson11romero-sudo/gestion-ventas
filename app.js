@@ -1,5 +1,5 @@
 // ========================================
-// CONFIGURACIÓN SUPABASE
+// SUPABASE
 // ========================================
 
 const SUPABASE_URL =
@@ -7,6 +7,7 @@ const SUPABASE_URL =
 
 const SUPABASE_KEY =
     "sb_publishable_4XzzjrO_JNsDjIiD0ttSBg_QcmkbiuN";
+
 
 const supabaseClient =
     window.supabase.createClient(
@@ -16,320 +17,333 @@ const supabaseClient =
 
 
 // ========================================
-// VARIABLES
+// ELEMENTOS
 // ========================================
 
-let ventas = [];
+const loginScreen =
+    document.getElementById("loginScreen");
+
+const appScreen =
+    document.getElementById("appScreen");
+
+const loginForm =
+    document.getElementById("loginForm");
+
+const loginError =
+    document.getElementById("loginError");
+
+const btnCerrarSesion =
+    document.getElementById("btnCerrarSesion");
 
 const formulario =
     document.getElementById("ventaForm");
 
 
 // ========================================
-// VERIFICAR SESIÓN
+// COMPROBAR SESIÓN
 // ========================================
 
-async function verificarSesion() {
+async function comprobarSesion() {
 
     const {
-        data: { session },
-        error
-    } = await supabaseClient.auth.getSession();
+        data: {
+            session
+        }
+    } = await supabaseClient
+        .auth
+        .getSession();
 
-    if (error) {
 
-        console.error(
-            "Error verificando sesión:",
+    if (session) {
+
+        mostrarAplicacion();
+
+    } else {
+
+        mostrarLogin();
+
+    }
+
+}
+
+
+// ========================================
+// MOSTRAR LOGIN
+// ========================================
+
+function mostrarLogin() {
+
+    loginScreen.style.display =
+        "flex";
+
+    appScreen.style.display =
+        "none";
+
+}
+
+
+// ========================================
+// MOSTRAR APLICACIÓN
+// ========================================
+
+function mostrarAplicacion() {
+
+    loginScreen.style.display =
+        "none";
+
+    appScreen.style.display =
+        "block";
+
+    cargarVentas();
+
+}
+
+
+// ========================================
+// LOGIN
+// ========================================
+
+loginForm.addEventListener(
+    "submit",
+    async function(e) {
+
+        e.preventDefault();
+
+
+        loginError.textContent =
+            "Iniciando sesión...";
+
+
+        const email =
+            document
+                .getElementById("loginEmail")
+                .value
+                .trim();
+
+
+        const password =
+            document
+                .getElementById("loginPassword")
+                .value;
+
+
+        const {
+            data,
             error
-        );
+        } =
+            await supabaseClient
+                .auth
+                .signInWithPassword({
 
-        window.location.href = "login.html";
+                    email: email,
 
-        return;
+                    password: password
+
+                });
+
+
+        if (error) {
+
+            console.error(error);
+
+            loginError.textContent =
+                "❌ " + error.message;
+
+            return;
+
+        }
+
+
+        loginError.textContent = "";
+
+
+        mostrarAplicacion();
+
     }
-
-    if (!session) {
-
-        window.location.href = "login.html";
-
-        return;
-    }
-
-    // Mostrar usuario conectado
-    mostrarUsuario(session.user);
-
-}
-
-
-// ========================================
-// MOSTRAR USUARIO Y BOTÓN SALIR
-// ========================================
-
-function mostrarUsuario(user) {
-
-    const header = document.querySelector("header");
-
-    if (!header) return;
-
-    const usuarioDiv =
-        document.createElement("div");
-
-    usuarioDiv.style.textAlign = "right";
-    usuarioDiv.style.padding = "10px 20px";
-
-    usuarioDiv.innerHTML = `
-
-        <span style="margin-right: 15px;">
-            👤 ${user.email}
-        </span>
-
-        <button
-            id="btnCerrarSesion"
-            type="button"
-            style="
-                padding: 8px 15px;
-                border: none;
-                border-radius: 6px;
-                cursor: pointer;
-            "
-        >
-            Cerrar sesión
-        </button>
-
-    `;
-
-    header.appendChild(usuarioDiv);
-
-
-    document
-        .getElementById("btnCerrarSesion")
-        .addEventListener(
-            "click",
-            cerrarSesion
-        );
-
-}
+);
 
 
 // ========================================
 // CERRAR SESIÓN
 // ========================================
 
-async function cerrarSesion() {
+btnCerrarSesion.addEventListener(
+    "click",
+    async function() {
 
-    const confirmar =
-        confirm(
-            "¿Quieres cerrar sesión?"
-        );
+        await supabaseClient
+            .auth
+            .signOut();
 
-    if (!confirmar) {
-        return;
+        mostrarLogin();
+
     }
-
-    const { error } =
-        await supabaseClient.auth.signOut();
-
-    if (error) {
-
-        console.error(
-            "Error cerrando sesión:",
-            error
-        );
-
-        alert(
-            "❌ No se pudo cerrar sesión."
-        );
-
-        return;
-    }
-
-    window.location.href =
-        "login.html";
-}
+);
 
 
 // ========================================
 // REGISTRAR VENTA
 // ========================================
 
-if (formulario) {
+formulario.addEventListener(
+    "submit",
+    async function(e) {
 
-    formulario.addEventListener(
-        "submit",
-        async function(e) {
-
-            e.preventDefault();
+        e.preventDefault();
 
 
-            const venta = {
+        const venta = {
 
-                numero_cliente:
+            numero_cliente:
+                document
+                    .getElementById("numeroCliente")
+                    .value
+                    .trim(),
+
+            nombre_cliente:
+                document
+                    .getElementById("nombreCliente")
+                    .value
+                    .trim(),
+
+            celular:
+                document
+                    .getElementById("celular")
+                    .value
+                    .trim(),
+
+            destino_tipo:
+                document
+                    .getElementById("destinoTipo")
+                    .value,
+
+            destino:
+                document
+                    .getElementById("destino")
+                    .value
+                    .trim(),
+
+            producto:
+                document
+                    .getElementById("producto")
+                    .value
+                    .trim(),
+
+            cantidad:
+                Number(
                     document
-                        .getElementById("numeroCliente")
+                        .getElementById("cantidad")
                         .value
-                        .trim(),
+                ),
 
-                nombre_cliente:
+            monto:
+                Number(
                     document
-                        .getElementById("nombreCliente")
+                        .getElementById("monto")
                         .value
-                        .trim(),
+                ),
 
-                celular:
-                    document
-                        .getElementById("celular")
-                        .value
-                        .trim(),
+            metodo_pago:
+                document
+                    .getElementById("metodoPago")
+                    .value,
 
-                destino_tipo:
-                    document
-                        .getElementById("destinoTipo")
-                        .value,
+            nombre_yape:
+                document
+                    .getElementById("nombreYape")
+                    .value
+                    .trim(),
 
-                destino:
-                    document
-                        .getElementById("destino")
-                        .value
-                        .trim(),
+            observaciones:
+                document
+                    .getElementById("observaciones")
+                    .value
+                    .trim()
 
-                producto:
-                    document
-                        .getElementById("producto")
-                        .value
-                        .trim(),
-
-                cantidad:
-                    Number(
-                        document
-                            .getElementById("cantidad")
-                            .value
-                    ),
-
-                monto:
-                    Number(
-                        document
-                            .getElementById("monto")
-                            .value
-                    ),
-
-                metodo_pago:
-                    document
-                        .getElementById("metodoPago")
-                        .value,
-
-                nombre_yape:
-                    document
-                        .getElementById("nombreYape")
-                        .value
-                        .trim(),
-
-                observaciones:
-                    document
-                        .getElementById("observaciones")
-                        .value
-                        .trim()
-
-            };
+        };
 
 
-            console.log(
-                "Venta que se enviará:",
-                venta
-            );
-
-
-            // ========================================
-            // INSERTAR EN SUPABASE
-            // ========================================
-
-            const {
-                data,
-                error
-            } = await supabaseClient
+        const {
+            error
+        } =
+            await supabaseClient
                 .from("ventas")
-                .insert([venta])
-                .select();
+                .insert([venta]);
 
 
-            if (error) {
+        if (error) {
 
-                console.error(
-                    "ERROR SUPABASE:",
-                    error
-                );
-
-                alert(
-                    "❌ Error al registrar la venta:\n\n" +
-                    error.message
-                );
-
-                return;
-            }
-
-
-            console.log(
-                "Venta guardada:",
-                data
-            );
-
+            console.error(error);
 
             alert(
-                "✅ Venta registrada correctamente"
+                "❌ Error:\n\n" +
+                error.message
             );
 
-
-            formulario.reset();
-
-            document
-                .getElementById("cantidad")
-                .value = 1;
-
-
-            await cargarVentas();
+            return;
 
         }
-    );
 
-}
+
+        alert(
+            "✅ Venta registrada correctamente"
+        );
+
+
+        formulario.reset();
+
+
+        document
+            .getElementById("cantidad")
+            .value = 1;
+
+
+        cargarVentas();
+
+    }
+);
 
 
 // ========================================
-// CARGAR VENTAS DESDE SUPABASE
+// CARGAR VENTAS
 // ========================================
+
+let ventas = [];
+
 
 async function cargarVentas() {
 
     const {
         data,
         error
-    } = await supabaseClient
-        .from("ventas")
-        .select("*")
-        .order(
-            "fecha",
-            {
-                ascending: false
-            }
-        );
+    } =
+        await supabaseClient
+            .from("ventas")
+            .select("*")
+            .order(
+                "fecha",
+                {
+                    ascending: false
+                }
+            );
 
 
     if (error) {
 
-        console.error(
-            "Error cargando ventas:",
-            error
-        );
+        console.error(error);
 
         alert(
-            "❌ No se pudieron cargar las ventas:\n\n" +
+            "❌ Error cargando ventas:\n\n" +
             error.message
         );
 
         return;
+
     }
 
 
-    ventas = data || [];
+    ventas =
+        data || [];
 
 
     mostrarVentas();
@@ -344,29 +358,21 @@ async function cargarVentas() {
 function mostrarVentas() {
 
     const tabla =
-        document.getElementById(
-            "tablaVentas"
-        );
-
-    if (!tabla) return;
-
-
-    const campoBusqueda =
-        document.getElementById(
-            "buscar"
-        );
+        document
+            .getElementById("tablaVentas");
 
 
     const busqueda =
-        campoBusqueda
-            ? campoBusqueda.value.toLowerCase()
-            : "";
+        document
+            .getElementById("buscar")
+            .value
+            .toLowerCase();
 
 
     tabla.innerHTML = "";
 
 
-    const ventasFiltradas =
+    const filtradas =
         ventas.filter(v =>
 
             (v.nombre_cliente || "")
@@ -394,7 +400,7 @@ function mostrarVentas() {
         );
 
 
-    ventasFiltradas.forEach(v => {
+    filtradas.forEach(v => {
 
         const fila =
             document.createElement("tr");
@@ -438,9 +444,8 @@ function mostrarVentas() {
             </td>
 
             <td>
-                S/ ${Number(
-                    v.monto || 0
-                ).toFixed(2)}
+                S/
+                ${Number(v.monto || 0).toFixed(2)}
             </td>
 
             <td>
@@ -451,9 +456,10 @@ function mostrarVentas() {
 
                 <button
                     class="btn-eliminar"
-                    onclick="eliminarVenta('${v.id}')"
-                >
+                    onclick="eliminarVenta('${v.id}')">
+
                     Eliminar
+
                 </button>
 
             </td>
@@ -472,52 +478,42 @@ function mostrarVentas() {
 
 
 // ========================================
-// ELIMINAR VENTA
+// ELIMINAR
 // ========================================
 
 async function eliminarVenta(id) {
 
     const confirmar =
         confirm(
-            "¿Estás seguro de eliminar esta venta?"
+            "¿Eliminar esta venta?"
         );
 
 
-    if (!confirmar) {
-        return;
-    }
+    if (!confirmar) return;
 
 
     const {
         error
-    } = await supabaseClient
-        .from("ventas")
-        .delete()
-        .eq("id", id);
+    } =
+        await supabaseClient
+            .from("ventas")
+            .delete()
+            .eq("id", id);
 
 
     if (error) {
 
-        console.error(
-            "Error eliminando:",
-            error
-        );
-
         alert(
-            "❌ No se pudo eliminar:\n\n" +
+            "❌ Error eliminando:\n\n" +
             error.message
         );
 
         return;
+
     }
 
 
-    alert(
-        "✅ Venta eliminada"
-    );
-
-
-    await cargarVentas();
+    cargarVentas();
 
 }
 
@@ -528,30 +524,25 @@ async function eliminarVenta(id) {
 
 function actualizarResumen() {
 
-    document.getElementById(
-        "totalVentas"
-    ).textContent =
+
+    document
+        .getElementById("totalVentas")
+        .textContent =
         ventas.length;
 
 
     const total =
         ventas.reduce(
-
             (suma, venta) =>
-
                 suma +
-                Number(
-                    venta.monto || 0
-                ),
-
+                Number(venta.monto || 0),
             0
-
         );
 
 
-    document.getElementById(
-        "totalDinero"
-    ).textContent =
+    document
+        .getElementById("totalDinero")
+        .textContent =
         total.toFixed(2);
 
 
@@ -571,15 +562,15 @@ function actualizarResumen() {
         ).length;
 
 
-    document.getElementById(
-        "totalLima"
-    ).textContent =
+    document
+        .getElementById("totalLima")
+        .textContent =
         lima;
 
 
-    document.getElementById(
-        "totalProvincia"
-    ).textContent =
+    document
+        .getElementById("totalProvincia")
+        .textContent =
         provincia;
 
 }
@@ -589,32 +580,16 @@ function actualizarResumen() {
 // BUSCADOR
 // ========================================
 
-const buscador =
-    document.getElementById(
-        "buscar"
-    );
-
-
-if (buscador) {
-
-    buscador.addEventListener(
+document
+    .getElementById("buscar")
+    .addEventListener(
         "input",
         mostrarVentas
     );
 
-}
-
 
 // ========================================
-// INICIAR APP
+// INICIAR
 // ========================================
 
-async function iniciarApp() {
-
-    await verificarSesion();
-
-    await cargarVentas();
-
-}
-
-iniciarApp();
+comprobarSesion();
