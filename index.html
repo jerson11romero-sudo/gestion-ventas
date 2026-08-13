@@ -1,230 +1,518 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="es">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>Gestión de Ventas</title>
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>JYA IMPORT ELECTRO - Ventas</title>
 
     <link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
 
-<header>
-    <div class="logo">
+
+<!-- =========================
+     LOGIN
+========================= -->
+
+<div id="loginScreen" class="login-container">
+
+    <div class="login-card">
+
         <h1>JYA IMPORT ELECTRO</h1>
-        <p>Gestión de Ventas</p>
-    </div>
-</header>
 
-<main class="container">
+        <p>Gestión de ventas</p>
 
-    <section class="card">
+        <form id="loginForm">
 
-        <h2>Registrar venta</h2>
+            <label>Correo electrónico</label>
 
-        <form id="ventaForm">
+            <input
+                type="email"
+                id="loginEmail"
+                placeholder="correo@ejemplo.com"
+                required
+            >
 
-            <div class="grid">
+            <label>Contraseña</label>
 
-                <div>
-                    <label>Número de cliente</label>
-                    <input
-                        type="text"
-                        id="numeroCliente"
-                        placeholder="Ej: C-0001"
-                        required
-                    >
-                </div>
-
-                <div>
-                    <label>Nombre del cliente</label>
-                    <input
-                        type="text"
-                        id="nombreCliente"
-                        placeholder="Nombre completo"
-                        required
-                    >
-                </div>
-
-                <div>
-                    <label>Celular</label>
-                    <input
-                        type="tel"
-                        id="celular"
-                        placeholder="999999999"
-                    >
-                </div>
-
-                <div>
-                    <label>Tipo de destino</label>
-
-                    <select id="destinoTipo" required>
-                        <option value="">Seleccionar</option>
-                        <option value="Lima">Lima</option>
-                        <option value="Provincia">Provincia</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label>Destino</label>
-
-                    <input
-                        type="text"
-                        id="destino"
-                        placeholder="Ej: Puente Piedra / Piura"
-                        required
-                    >
-                </div>
-
-                <div>
-                    <label>Producto</label>
-
-                    <input
-                        type="text"
-                        id="producto"
-                        placeholder="Ej: Wahl Magic Clip"
-                        required
-                    >
-                </div>
-
-                <div>
-                    <label>Cantidad</label>
-
-                    <input
-                        type="number"
-                        id="cantidad"
-                        min="1"
-                        value="1"
-                        required
-                    >
-                </div>
-
-                <div>
-                    <label>Monto pagado</label>
-
-                    <input
-                        type="number"
-                        id="monto"
-                        step="0.01"
-                        placeholder="0.00"
-                        required
-                    >
-                </div>
-
-                <div>
-                    <label>Método de pago</label>
-
-                    <select id="metodoPago" required>
-                        <option value="">Seleccionar</option>
-                        <option value="Yape">Yape</option>
-                        <option value="Plin">Plin</option>
-                        <option value="Transferencia">Transferencia</option>
-                        <option value="Efectivo">Efectivo</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label>Nombre del Yape</label>
-
-                    <input
-                        type="text"
-                        id="nombreYape"
-                        placeholder="Nombre que aparece en Yape"
-                    >
-                </div>
-
-            </div>
-
-            <div>
-                <label>Observaciones</label>
-
-                <textarea
-                    id="observaciones"
-                    placeholder="Ej: Enviar por Shalom, llamar antes de entregar..."
-                ></textarea>
-            </div>
+            <input
+                type="password"
+                id="loginPassword"
+                placeholder="Contraseña"
+                required
+            >
 
             <button type="submit" class="btn">
-                Registrar venta
+                Iniciar sesión
             </button>
 
         </form>
 
-    </section>
+        <p id="loginError"
+           style="color:red; margin-top:15px;">
+        </p>
+
+    </div>
+
+</div>
 
 
-    <section class="resumen">
 
-        <div class="stat">
-            <span>Total ventas</span>
-            <strong id="totalVentas">0</strong>
+<!-- =========================
+     APLICACIÓN
+========================= -->
+
+<div id="appScreen" style="display:none;">
+
+
+<header>
+
+    <div class="logo">
+
+        <h1>JYA IMPORT ELECTRO</h1>
+
+        <p>Gestión de Ventas</p>
+
+    </div>
+
+
+    <button
+        id="btnCerrarSesion"
+        class="btn-eliminar">
+
+        Cerrar sesión
+
+    </button>
+
+</header>
+
+
+
+<main class="container">
+
+
+<section class="card">
+
+    <h2>Registrar venta</h2>
+
+
+    <form id="ventaForm">
+
+
+        <div class="grid">
+
+
+            <div>
+
+                <label>
+                    Número de cliente
+                </label>
+
+                <input
+                    type="text"
+                    id="numeroCliente"
+                    placeholder="Ej: C-0001"
+                    required
+                >
+
+            </div>
+
+
+
+            <div>
+
+                <label>
+                    Nombre del cliente
+                </label>
+
+                <input
+                    type="text"
+                    id="nombreCliente"
+                    placeholder="Nombre completo"
+                    required
+                >
+
+            </div>
+
+
+
+            <div>
+
+                <label>
+                    Celular
+                </label>
+
+                <input
+                    type="tel"
+                    id="celular"
+                    placeholder="999999999"
+                >
+
+            </div>
+
+
+
+            <div>
+
+                <label>
+                    Tipo de destino
+                </label>
+
+                <select
+                    id="destinoTipo"
+                    required>
+
+                    <option value="">
+                        Seleccionar
+                    </option>
+
+                    <option value="Lima">
+                        Lima
+                    </option>
+
+                    <option value="Provincia">
+                        Provincia
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <div>
+
+                <label>
+                    Destino
+                </label>
+
+                <input
+                    type="text"
+                    id="destino"
+                    placeholder="Ej: Piura"
+                    required
+                >
+
+            </div>
+
+
+
+            <div>
+
+                <label>
+                    Producto
+                </label>
+
+                <input
+                    type="text"
+                    id="producto"
+                    placeholder="Ej: Wahl Magic Clip"
+                    required
+                >
+
+            </div>
+
+
+
+            <div>
+
+                <label>
+                    Cantidad
+                </label>
+
+                <input
+                    type="number"
+                    id="cantidad"
+                    min="1"
+                    value="1"
+                    required
+                >
+
+            </div>
+
+
+
+            <div>
+
+                <label>
+                    Monto pagado
+                </label>
+
+                <input
+                    type="number"
+                    id="monto"
+                    step="0.01"
+                    placeholder="0.00"
+                    required
+                >
+
+            </div>
+
+
+
+            <div>
+
+                <label>
+                    Método de pago
+                </label>
+
+                <select
+                    id="metodoPago"
+                    required>
+
+                    <option value="">
+                        Seleccionar
+                    </option>
+
+                    <option value="Yape">
+                        Yape
+                    </option>
+
+                    <option value="Plin">
+                        Plin
+                    </option>
+
+                    <option value="Transferencia">
+                        Transferencia
+                    </option>
+
+                    <option value="Efectivo">
+                        Efectivo
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <div>
+
+                <label>
+                    Nombre del Yape
+                </label>
+
+                <input
+                    type="text"
+                    id="nombreYape"
+                    placeholder="Nombre que aparece en Yape"
+                >
+
+            </div>
+
+
         </div>
 
-        <div class="stat">
-            <span>Total recaudado</span>
-            <strong>S/ <span id="totalDinero">0.00</span></strong>
-        </div>
-
-        <div class="stat">
-            <span>Lima</span>
-            <strong id="totalLima">0</strong>
-        </div>
-
-        <div class="stat">
-            <span>Provincia</span>
-            <strong id="totalProvincia">0</strong>
-        </div>
-
-    </section>
 
 
-    <section class="card">
+        <label>
+            Observaciones
+        </label>
 
-        <div class="tabla-header">
+        <textarea
+            id="observaciones"
+            placeholder="Ej: Enviar por Shalom..."
+        ></textarea>
 
-            <h2>Ventas registradas</h2>
 
-            <input
-                type="text"
-                id="buscar"
-                placeholder="🔎 Buscar cliente, producto..."
-            >
 
-        </div>
+        <button
+            type="submit"
+            class="btn">
 
-        <div class="tabla-container">
+            Registrar venta
 
-            <table>
+        </button>
 
-                <thead>
 
-                    <tr>
-                        <th>Cliente</th>
-                        <th>Nombre</th>
-                        <th>Destino</th>
-                        <th>Producto</th>
-                        <th>Pago</th>
-                        <th>Yape</th>
-                        <th>Monto</th>
-                        <th>Fecha</th>
-                        <th>Acciones</th>
-                    </tr>
+    </form>
 
-                </thead>
+</section>
 
-                <tbody id="tablaVentas"></tbody>
 
-            </table>
 
-        </div>
+<!-- =========================
+     RESUMEN
+========================= -->
 
-    </section>
+<section class="resumen">
+
+
+<div class="stat">
+
+    <span>
+        Total ventas
+    </span>
+
+    <strong id="totalVentas">
+        0
+    </strong>
+
+</div>
+
+
+
+<div class="stat">
+
+    <span>
+        Total recaudado
+    </span>
+
+    <strong>
+        S/
+        <span id="totalDinero">
+            0.00
+        </span>
+    </strong>
+
+</div>
+
+
+
+<div class="stat">
+
+    <span>
+        Lima
+    </span>
+
+    <strong id="totalLima">
+        0
+    </strong>
+
+</div>
+
+
+
+<div class="stat">
+
+    <span>
+        Provincia
+    </span>
+
+    <strong id="totalProvincia">
+        0
+    </strong>
+
+</div>
+
+
+</section>
+
+
+
+<!-- =========================
+     TABLA
+========================= -->
+
+<section class="card">
+
+
+<div class="tabla-header">
+
+    <h2>
+        Ventas registradas
+    </h2>
+
+
+    <input
+        type="text"
+        id="buscar"
+        placeholder="🔎 Buscar..."
+    >
+
+</div>
+
+
+
+<div class="tabla-container">
+
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>
+Cliente
+</th>
+
+<th>
+Nombre
+</th>
+
+<th>
+Destino
+</th>
+
+<th>
+Producto
+</th>
+
+<th>
+Pago
+</th>
+
+<th>
+Yape
+</th>
+
+<th>
+Monto
+</th>
+
+<th>
+Fecha
+</th>
+
+<th>
+Acciones
+</th>
+
+</tr>
+
+</thead>
+
+
+
+<tbody id="tablaVentas">
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+</section>
+
 
 </main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+</div>
+
+
+
+<!-- SUPABASE -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+</script>
+
+
+<!-- TU JAVASCRIPT -->
+
 <script src="app.js"></script>
 
+
 </body>
+
 </html>
