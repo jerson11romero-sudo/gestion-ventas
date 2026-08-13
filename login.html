@@ -1,33 +1,57 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Iniciar sesión - JYA IMPORT ELECTRO</title>
 
     <link rel="stylesheet" href="style.css">
+
 </head>
+
 
 <body>
 
+
 <header>
+
     <div class="logo">
+
         <h1>JYA IMPORT ELECTRO</h1>
+
         <p>Acceso al sistema</p>
+
     </div>
+
 </header>
+
+
 
 <main class="container">
 
+
     <section class="card login-card">
+
 
         <h2>Iniciar sesión</h2>
 
+
         <form id="loginForm">
 
+
             <div>
-                <label>Correo electrónico</label>
+
+                <label>
+                    Correo electrónico
+                </label>
+
 
                 <input
                     type="email"
@@ -35,10 +59,17 @@
                     placeholder="correo@ejemplo.com"
                     required
                 >
+
             </div>
 
+
+
             <div>
-                <label>Contraseña</label>
+
+                <label>
+                    Contraseña
+                </label>
+
 
                 <input
                     type="password"
@@ -46,58 +77,156 @@
                     placeholder="Contraseña"
                     required
                 >
+
             </div>
 
-            <button type="submit" class="btn">
+
+
+            <button
+                type="submit"
+                class="btn">
+
                 Ingresar
+
             </button>
+
 
         </form>
 
-        <p id="loginError" style="color:red; margin-top:15px;"></p>
+
+        <p
+            id="loginError"
+            style="color:red; margin-top:15px;">
+        </p>
+
 
     </section>
 
+
 </main>
+
+
+
+<!-- SUPABASE -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<script>
-    const SUPABASE_URL = "TU_SUPABASE_URL";
-    const SUPABASE_ANON_KEY = "TU_SUPABASE_ANON_KEY";
 
-    const supabaseClient = window.supabase.createClient(
+<script>
+
+
+// ========================================
+// SUPABASE
+// ========================================
+
+const SUPABASE_URL =
+    "https://labgklmijzytxzjsrwxe.supabase.co";
+
+
+const SUPABASE_KEY =
+    "sb_publishable_4XzzjrO_JNsDjIiD0ttSBg_QcmkbiuN";
+
+
+const supabaseClient =
+    window.supabase.createClient(
         SUPABASE_URL,
-        SUPABASE_ANON_KEY
+        SUPABASE_KEY
     );
 
-    const loginForm = document.getElementById("loginForm");
-    const loginError = document.getElementById("loginError");
 
-    loginForm.addEventListener("submit", async (e) => {
+
+// ========================================
+// ELEMENTOS
+// ========================================
+
+const loginForm =
+    document.getElementById("loginForm");
+
+
+const loginError =
+    document.getElementById("loginError");
+
+
+
+// ========================================
+// LOGIN
+// ========================================
+
+loginForm.addEventListener(
+    "submit",
+    async function(e) {
 
         e.preventDefault();
 
-        loginError.textContent = "";
 
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
+        loginError.textContent =
+            "Iniciando sesión...";
 
-        const { data, error } =
-            await supabaseClient.auth.signInWithPassword({
-                email: email,
-                password: password
-            });
+
+        const email =
+            document
+                .getElementById("email")
+                .value
+                .trim();
+
+
+        const password =
+            document
+                .getElementById("password")
+                .value;
+
+
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .auth
+                .signInWithPassword({
+
+                    email: email,
+
+                    password: password
+
+                });
+
+
 
         if (error) {
+
+            console.error(
+                "Error login:",
+                error
+            );
+
+
             loginError.textContent =
-                "Correo o contraseña incorrectos.";
+                "❌ " + error.message;
+
+
             return;
+
         }
 
-        window.location.href = "index.html";
-    });
+
+
+        console.log(
+            "Sesión iniciada:",
+            data
+        );
+
+
+        window.location.href =
+            "index.html";
+
+    }
+
+);
+
 </script>
 
+
 </body>
+
 </html>
