@@ -8,7 +8,6 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
     "sb_publishable_4XzzjrO_JNsDjIiD0ttSBg_QcmkbiuN";
 
-
 const supabaseClient =
     window.supabase.createClient(
         SUPABASE_URL,
@@ -17,26 +16,10 @@ const supabaseClient =
 
 
 // ========================================
-// ELEMENTOS
+// VARIABLES
 // ========================================
 
-const loginScreen =
-    document.getElementById("loginScreen");
-
-const appScreen =
-    document.getElementById("appScreen");
-
-const loginForm =
-    document.getElementById("loginForm");
-
-const loginError =
-    document.getElementById("loginError");
-
-const btnCerrarSesion =
-    document.getElementById("btnCerrarSesion");
-
-const formulario =
-    document.getElementById("ventaForm");
+let ventas = [];
 
 
 // ========================================
@@ -54,45 +37,14 @@ async function comprobarSesion() {
         .getSession();
 
 
-    if (session) {
+    if (!session) {
 
-        mostrarAplicacion();
+        window.location.href =
+            "login.html";
 
-    } else {
-
-        mostrarLogin();
-
+        return;
     }
 
-}
-
-
-// ========================================
-// MOSTRAR LOGIN
-// ========================================
-
-function mostrarLogin() {
-
-    loginScreen.style.display =
-        "flex";
-
-    appScreen.style.display =
-        "none";
-
-}
-
-
-// ========================================
-// MOSTRAR APLICACIÓN
-// ========================================
-
-function mostrarAplicacion() {
-
-    loginScreen.style.display =
-        "none";
-
-    appScreen.style.display =
-        "block";
 
     cargarVentas();
 
@@ -100,216 +52,138 @@ function mostrarAplicacion() {
 
 
 // ========================================
-// LOGIN
-// ========================================
-
-loginForm.addEventListener(
-    "submit",
-    async function(e) {
-
-        e.preventDefault();
-
-
-        loginError.textContent =
-            "Iniciando sesión...";
-
-
-        const email =
-            document
-                .getElementById("loginEmail")
-                .value
-                .trim();
-
-
-        const password =
-            document
-                .getElementById("loginPassword")
-                .value;
-
-
-        const {
-            data,
-            error
-        } =
-            await supabaseClient
-                .auth
-                .signInWithPassword({
-
-                    email: email,
-
-                    password: password
-
-                });
-
-
-        if (error) {
-
-            console.error(error);
-
-            loginError.textContent =
-                "❌ " + error.message;
-
-            return;
-
-        }
-
-
-        loginError.textContent = "";
-
-
-        mostrarAplicacion();
-
-    }
-);
-
-
-// ========================================
-// CERRAR SESIÓN
-// ========================================
-
-btnCerrarSesion.addEventListener(
-    "click",
-    async function() {
-
-        await supabaseClient
-            .auth
-            .signOut();
-
-        mostrarLogin();
-
-    }
-);
-
-
-// ========================================
 // REGISTRAR VENTA
 // ========================================
 
-formulario.addEventListener(
-    "submit",
-    async function(e) {
-
-        e.preventDefault();
+const formulario =
+    document.getElementById("ventaForm");
 
 
-        const venta = {
+if (formulario) {
 
-            numero_cliente:
-                document
-                    .getElementById("numeroCliente")
-                    .value
-                    .trim(),
+    formulario.addEventListener(
+        "submit",
+        async function(e) {
 
-            nombre_cliente:
-                document
-                    .getElementById("nombreCliente")
-                    .value
-                    .trim(),
+            e.preventDefault();
 
-            celular:
-                document
-                    .getElementById("celular")
-                    .value
-                    .trim(),
 
-            destino_tipo:
-                document
-                    .getElementById("destinoTipo")
-                    .value,
+            const venta = {
 
-            destino:
-                document
-                    .getElementById("destino")
-                    .value
-                    .trim(),
-
-            producto:
-                document
-                    .getElementById("producto")
-                    .value
-                    .trim(),
-
-            cantidad:
-                Number(
+                numero_cliente:
                     document
-                        .getElementById("cantidad")
+                        .getElementById("numeroCliente")
                         .value
-                ),
+                        .trim(),
 
-            monto:
-                Number(
+                nombre_cliente:
                     document
-                        .getElementById("monto")
+                        .getElementById("nombreCliente")
                         .value
-                ),
+                        .trim(),
 
-            metodo_pago:
-                document
-                    .getElementById("metodoPago")
-                    .value,
+                celular:
+                    document
+                        .getElementById("celular")
+                        .value
+                        .trim(),
 
-            nombre_yape:
-                document
-                    .getElementById("nombreYape")
-                    .value
-                    .trim(),
+                destino_tipo:
+                    document
+                        .getElementById("destinoTipo")
+                        .value,
 
-            observaciones:
-                document
-                    .getElementById("observaciones")
-                    .value
-                    .trim()
+                destino:
+                    document
+                        .getElementById("destino")
+                        .value
+                        .trim(),
 
-        };
+                producto:
+                    document
+                        .getElementById("producto")
+                        .value
+                        .trim(),
+
+                cantidad:
+                    Number(
+                        document
+                            .getElementById("cantidad")
+                            .value
+                    ),
+
+                monto:
+                    Number(
+                        document
+                            .getElementById("monto")
+                            .value
+                    ),
+
+                metodo_pago:
+                    document
+                        .getElementById("metodoPago")
+                        .value,
+
+                nombre_yape:
+                    document
+                        .getElementById("nombreYape")
+                        .value
+                        .trim(),
+
+                observaciones:
+                    document
+                        .getElementById("observaciones")
+                        .value
+                        .trim()
+
+            };
 
 
-        const {
-            error
-        } =
-            await supabaseClient
-                .from("ventas")
-                .insert([venta]);
+            const {
+                error
+            } =
+                await supabaseClient
+                    .from("ventas")
+                    .insert([venta]);
 
 
-        if (error) {
+            if (error) {
 
-            console.error(error);
+                console.error(error);
+
+                alert(
+                    "❌ Error:\n\n" +
+                    error.message
+                );
+
+                return;
+            }
+
 
             alert(
-                "❌ Error:\n\n" +
-                error.message
+                "✅ Venta registrada correctamente"
             );
 
-            return;
+
+            formulario.reset();
+
+
+            document
+                .getElementById("cantidad")
+                .value = 1;
+
+
+            cargarVentas();
 
         }
+    );
 
-
-        alert(
-            "✅ Venta registrada correctamente"
-        );
-
-
-        formulario.reset();
-
-
-        document
-            .getElementById("cantidad")
-            .value = 1;
-
-
-        cargarVentas();
-
-    }
-);
+}
 
 
 // ========================================
 // CARGAR VENTAS
 // ========================================
-
-let ventas = [];
-
 
 async function cargarVentas() {
 
@@ -338,12 +212,10 @@ async function cargarVentas() {
         );
 
         return;
-
     }
 
 
-    ventas =
-        data || [];
+    ventas = data || [];
 
 
     mostrarVentas();
@@ -358,15 +230,24 @@ async function cargarVentas() {
 function mostrarVentas() {
 
     const tabla =
-        document
-            .getElementById("tablaVentas");
+        document.getElementById(
+            "tablaVentas"
+        );
+
+
+    if (!tabla) return;
+
+
+    const buscar =
+        document.getElementById(
+            "buscar"
+        );
 
 
     const busqueda =
-        document
-            .getElementById("buscar")
-            .value
-            .toLowerCase();
+        buscar
+            ? buscar.value.toLowerCase()
+            : "";
 
 
     tabla.innerHTML = "";
@@ -478,7 +359,7 @@ function mostrarVentas() {
 
 
 // ========================================
-// ELIMINAR
+// ELIMINAR VENTA
 // ========================================
 
 async function eliminarVenta(id) {
@@ -503,13 +384,14 @@ async function eliminarVenta(id) {
 
     if (error) {
 
+        console.error(error);
+
         alert(
             "❌ Error eliminando:\n\n" +
             error.message
         );
 
         return;
-
     }
 
 
@@ -524,54 +406,76 @@ async function eliminarVenta(id) {
 
 function actualizarResumen() {
 
+    const totalVentas =
+        document.getElementById(
+            "totalVentas"
+        );
 
-    document
-        .getElementById("totalVentas")
-        .textContent =
-        ventas.length;
+    const totalDinero =
+        document.getElementById(
+            "totalDinero"
+        );
+
+    const totalLima =
+        document.getElementById(
+            "totalLima"
+        );
+
+    const totalProvincia =
+        document.getElementById(
+            "totalProvincia"
+        );
+
+
+    if (totalVentas) {
+
+        totalVentas.textContent =
+            ventas.length;
+
+    }
 
 
     const total =
         ventas.reduce(
             (suma, venta) =>
                 suma +
-                Number(venta.monto || 0),
+                Number(
+                    venta.monto || 0
+                ),
             0
         );
 
 
-    document
-        .getElementById("totalDinero")
-        .textContent =
-        total.toFixed(2);
+    if (totalDinero) {
+
+        totalDinero.textContent =
+            total.toFixed(2);
+
+    }
 
 
-    const lima =
-        ventas.filter(
-            v =>
-                v.destino_tipo ===
-                "Lima"
-        ).length;
+    if (totalLima) {
+
+        totalLima.textContent =
+            ventas.filter(
+                v =>
+                    v.destino_tipo ===
+                    "Lima"
+            ).length;
+
+    }
 
 
-    const provincia =
-        ventas.filter(
-            v =>
-                v.destino_tipo ===
-                "Provincia"
-        ).length;
+    if (totalProvincia) {
 
+        totalProvincia.textContent =
+            ventas.filter(
+                v =>
+                    v.destino_tipo ===
+                    "Provincia"
+            ).length;
 
-    document
-        .getElementById("totalLima")
-        .textContent =
-        lima;
-
-
-    document
-        .getElementById("totalProvincia")
-        .textContent =
-        provincia;
+    }
 
 }
 
@@ -580,16 +484,35 @@ function actualizarResumen() {
 // BUSCADOR
 // ========================================
 
-document
-    .getElementById("buscar")
-    .addEventListener(
+const buscador =
+    document.getElementById(
+        "buscar"
+    );
+
+
+if (buscador) {
+
+    buscador.addEventListener(
         "input",
         mostrarVentas
     );
 
-document
-    .getElementById("btnCerrarSesion")
-    .addEventListener(
+}
+
+
+// ========================================
+// CERRAR SESIÓN
+// ========================================
+
+const btnCerrarSesion =
+    document.getElementById(
+        "btnCerrarSesion"
+    );
+
+
+if (btnCerrarSesion) {
+
+    btnCerrarSesion.addEventListener(
         "click",
         async function() {
 
@@ -597,11 +520,15 @@ document
                 .auth
                 .signOut();
 
+
             window.location.href =
                 "login.html";
 
         }
     );
+
+}
+
 
 // ========================================
 // INICIAR
