@@ -33,7 +33,6 @@
 </header>
 
 
-
 <main class="container">
 
 
@@ -52,7 +51,6 @@
                     Correo electrónico
                 </label>
 
-
                 <input
                     type="email"
                     id="email"
@@ -63,13 +61,11 @@
             </div>
 
 
-
             <div>
 
                 <label>
                     Contraseña
                 </label>
-
 
                 <input
                     type="password"
@@ -79,7 +75,6 @@
                 >
 
             </div>
-
 
 
             <button
@@ -106,14 +101,12 @@
 </main>
 
 
-
 <!-- SUPABASE -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 
 <script>
-
 
 // ========================================
 // SUPABASE
@@ -134,7 +127,6 @@ const supabaseClient =
     );
 
 
-
 // ========================================
 // ELEMENTOS
 // ========================================
@@ -145,7 +137,6 @@ const loginForm =
 
 const loginError =
     document.getElementById("loginError");
-
 
 
 // ========================================
@@ -176,6 +167,8 @@ loginForm.addEventListener(
                 .value;
 
 
+        console.log("Correo:", email);
+
 
         const {
             data,
@@ -192,11 +185,10 @@ loginForm.addEventListener(
                 });
 
 
-
         if (error) {
 
             console.error(
-                "Error login:",
+                "ERROR SUPABASE:",
                 error
             );
 
@@ -210,11 +202,14 @@ loginForm.addEventListener(
         }
 
 
-
         console.log(
-            "Sesión iniciada:",
+            "LOGIN CORRECTO:",
             data
         );
+
+
+        loginError.textContent =
+            "✅ Acceso correcto";
 
 
         window.location.href =
