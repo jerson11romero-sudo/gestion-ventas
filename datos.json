@@ -1,0 +1,14 @@
+{
+    "empresa": "JYA IMPORT ELECTRO",
+    "moneda": "PEN",
+    "tiposDestino": [
+        "Lima",
+        "Provincia"
+    ],
+    "metodosPago": [
+        "Yape",
+        "Plin",
+        "Transferencia",
+        "Efectivo"
+    ]
+}
