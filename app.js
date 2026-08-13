@@ -1,141 +1,292 @@
-const SUPABASE_URL = "https://labgklmijzytxzjsrwxe.supabase.co/rest/v1/";
+ // ========================================
+// CONFIGURACIÓN SUPABASE
+// ========================================
 
-const SUPABASE_KEY = "sb_publishable_4XzzjrO_JNsDjIiD0ttSBg_QcmkbiuN";
+const SUPABASE_URL =
+    "https://labgklmijzytxzjsrwxe.supabase.co";
 
-const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-);
+const SUPABASE_KEY =
+    "sb_publishable_4XzzjrO_JNsDjIiD0ttSBg_QcmkbiuN";
 
-let ventas =  [];
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
 
-const formulario = document.getElementById("ventaForm");
 
-formulario.addEventListener("submit", function(e) {
+// ========================================
+// VARIABLES
+// ========================================
+
+let ventas = [];
+
+const formulario =
+    document.getElementById("ventaForm");
+
+
+// ========================================
+// REGISTRAR VENTA
+// ========================================
+
+formulario.addEventListener("submit", async function(e) {
 
     e.preventDefault();
 
+
     const venta = {
 
-        id: Date.now(),
+        numero_cliente:
+            document.getElementById("numeroCliente").value.trim(),
 
-        numeroCliente:
-            document.getElementById("numeroCliente").value,
-
-        nombreCliente:
-            document.getElementById("nombreCliente").value,
+        nombre_cliente:
+            document.getElementById("nombreCliente").value.trim(),
 
         celular:
-            document.getElementById("celular").value,
+            document.getElementById("celular").value.trim(),
 
-        destinoTipo:
+        destino_tipo:
             document.getElementById("destinoTipo").value,
 
         destino:
-            document.getElementById("destino").value,
+            document.getElementById("destino").value.trim(),
 
         producto:
-            document.getElementById("producto").value,
+            document.getElementById("producto").value.trim(),
 
         cantidad:
-            Number(document.getElementById("cantidad").value),
+            Number(
+                document.getElementById("cantidad").value
+            ),
 
         monto:
-            Number(document.getElementById("monto").value),
+            Number(
+                document.getElementById("monto").value
+            ),
 
-        metodoPago:
+        metodo_pago:
             document.getElementById("metodoPago").value,
 
-        nombreYape:
-            document.getElementById("nombreYape").value,
+        nombre_yape:
+            document.getElementById("nombreYape").value.trim(),
 
         observaciones:
-            document.getElementById("observaciones").value,
-
-        fecha:
-            new Date().toLocaleString("es-PE")
+            document.getElementById("observaciones").value.trim()
 
     };
 
-    ventas.push(venta);
 
-    guardarVentas();
+    console.log("Venta que se enviará:", venta);
+
+
+    // ========================================
+    // INSERTAR EN SUPABASE
+    // ========================================
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from("ventas")
+        .insert([venta])
+        .select();
+
+
+    if (error) {
+
+        console.error("ERROR SUPABASE:", error);
+
+        alert(
+            "❌ Error al registrar la venta:\n\n" +
+            error.message
+        );
+
+        return;
+    }
+
+
+    console.log("Venta guardada:", data);
+
+
+    alert(
+        "✅ Venta registrada correctamente"
+    );
+
 
     formulario.reset();
 
     document.getElementById("cantidad").value = 1;
 
-    mostrarVentas();
 
-    alert("Venta registrada correctamente.");
+    await cargarVentas();
 
 });
 
 
-function guardarVentas() {
+// ========================================
+// CARGAR VENTAS DESDE SUPABASE
+// ========================================
+
+async function cargarVentas() {
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from("ventas")
+        .select("*")
+        .order("fecha", {
+            ascending: false
+        });
 
 
+    if (error) {
+
+        console.error(
+            "Error cargando ventas:",
+            error
+        );
+
+        alert(
+            "❌ No se pudieron cargar las ventas:\n\n" +
+            error.message
+        );
+
+        return;
+    }
+
+
+    ventas = data || [];
+
+
+    mostrarVentas();
 
 }
 
+
+// ========================================
+// MOSTRAR VENTAS
+// ========================================
 
 function mostrarVentas() {
 
     const tabla =
         document.getElementById("tablaVentas");
 
+
+    const campoBusqueda =
+        document.getElementById("buscar");
+
+
     const busqueda =
-        document.getElementById("buscar").value.toLowerCase();
+        campoBusqueda
+            ? campoBusqueda.value.toLowerCase()
+            : "";
+
 
     tabla.innerHTML = "";
 
-    const ventasFiltradas = ventas.filter(v =>
 
-        v.nombreCliente.toLowerCase().includes(busqueda) ||
+    const ventasFiltradas =
+        ventas.filter(v =>
 
-        v.numeroCliente.toLowerCase().includes(busqueda) ||
+            (v.nombre_cliente || "")
+                .toLowerCase()
+                .includes(busqueda)
 
-        v.producto.toLowerCase().includes(busqueda) ||
+            ||
 
-        v.destino.toLowerCase().includes(busqueda)
+            (v.numero_cliente || "")
+                .toLowerCase()
+                .includes(busqueda)
 
-    );
+            ||
+
+            (v.producto || "")
+                .toLowerCase()
+                .includes(busqueda)
+
+            ||
+
+            (v.destino || "")
+                .toLowerCase()
+                .includes(busqueda)
+
+        );
 
 
     ventasFiltradas.forEach(v => {
 
-        const fila = document.createElement("tr");
+        const fila =
+            document.createElement("tr");
+
+
+        const fecha =
+            v.fecha
+                ? new Date(v.fecha)
+                    .toLocaleString("es-PE")
+                : "-";
+
 
         fila.innerHTML = `
 
-            <td>${v.numeroCliente}</td>
-
-            <td>${v.nombreCliente}</td>
-
             <td>
-                ${v.destinoTipo}<br>
-                ${v.destino}
+                ${v.numero_cliente || "-"}
             </td>
 
+
             <td>
-                ${v.producto}
+                ${v.nombre_cliente || "-"}
+            </td>
+
+
+            <td>
+
+                ${v.destino_tipo || "-"}
+
                 <br>
-                x${v.cantidad}
+
+                ${v.destino || "-"}
+
             </td>
 
-            <td>${v.metodoPago}</td>
 
-            <td>${v.nombreYape || "-"}</td>
+            <td>
 
-            <td>S/ ${v.monto.toFixed(2)}</td>
+                ${v.producto || "-"}
 
-            <td>${v.fecha}</td>
+                <br>
+
+                x${v.cantidad || 0}
+
+            </td>
+
+
+            <td>
+                ${v.metodo_pago || "-"}
+            </td>
+
+
+            <td>
+                ${v.nombre_yape || "-"}
+            </td>
+
+
+            <td>
+                S/ ${Number(v.monto || 0).toFixed(2)}
+            </td>
+
+
+            <td>
+                ${fecha}
+            </td>
+
 
             <td>
 
                 <button
                     class="btn-eliminar"
-                    onclick="eliminarVenta(${v.id})"
+                    onclick="eliminarVenta('${v.id}')"
                 >
                     Eliminar
                 </button>
@@ -143,6 +294,7 @@ function mostrarVentas() {
             </td>
 
         `;
+
 
         tabla.appendChild(fila);
 
@@ -154,65 +306,137 @@ function mostrarVentas() {
 }
 
 
-function eliminarVenta(id) {
+// ========================================
+// ELIMINAR VENTA
+// ========================================
+
+async function eliminarVenta(id) {
 
     const confirmar =
-        confirm("¿Eliminar esta venta?");
+        confirm(
+            "¿Estás seguro de eliminar esta venta?"
+        );
 
-    if (!confirmar) return;
 
-    ventas =
-        ventas.filter(v => v.id !== id);
+    if (!confirmar) {
+        return;
+    }
 
-    guardarVentas();
 
-    mostrarVentas();
+    const {
+        error
+    } = await supabaseClient
+        .from("ventas")
+        .delete()
+        .eq("id", id);
+
+
+    if (error) {
+
+        console.error(
+            "Error eliminando:",
+            error
+        );
+
+        alert(
+            "❌ No se pudo eliminar:\n\n" +
+            error.message
+        );
+
+        return;
+    }
+
+
+    alert(
+        "✅ Venta eliminada"
+    );
+
+
+    await cargarVentas();
 
 }
 
 
+// ========================================
+// RESUMEN
+// ========================================
+
 function actualizarResumen() {
 
-    document.getElementById("totalVentas").textContent =
+
+    document.getElementById(
+        "totalVentas"
+    ).textContent =
         ventas.length;
 
 
     const total =
         ventas.reduce(
-            (suma, venta) => suma + venta.monto,
+
+            (suma, venta) =>
+
+                suma +
+                Number(venta.monto || 0),
+
             0
+
         );
 
-    document.getElementById("totalDinero").textContent =
+
+    document.getElementById(
+        "totalDinero"
+    ).textContent =
         total.toFixed(2);
 
 
     const lima =
         ventas.filter(
-            v => v.destinoTipo === "Lima"
+            v =>
+                v.destino_tipo === "Lima"
         ).length;
+
 
     const provincia =
         ventas.filter(
-            v => v.destinoTipo === "Provincia"
+            v =>
+                v.destino_tipo === "Provincia"
         ).length;
 
 
-    document.getElementById("totalLima").textContent =
+    document.getElementById(
+        "totalLima"
+    ).textContent =
         lima;
 
-    document.getElementById("totalProvincia").textContent =
+
+    document.getElementById(
+        "totalProvincia"
+    ).textContent =
         provincia;
 
 }
 
 
-document
-    .getElementById("buscar")
-    .addEventListener(
+// ========================================
+// BUSCADOR
+// ========================================
+
+const buscador =
+    document.getElementById("buscar");
+
+
+if (buscador) {
+
+    buscador.addEventListener(
         "input",
         mostrarVentas
     );
 
+}
 
-mostrarVentas();
+
+// ========================================
+// INICIAR APP
+// ========================================
+
+cargarVentas();
