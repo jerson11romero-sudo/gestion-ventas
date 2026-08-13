@@ -2,31 +2,22 @@
 <html lang="es">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Login - JYA IMPORT ELECTRO</title>
+    <title>JYA IMPORT ELECTRO - Login</title>
 
     <link rel="stylesheet" href="style.css">
-
 </head>
 
 <body>
 
 <header>
-
     <div class="logo">
-
         <h1>JYA IMPORT ELECTRO</h1>
-
         <p>Acceso al sistema</p>
-
     </div>
-
 </header>
-
 
 <main class="container">
 
@@ -34,11 +25,9 @@
 
         <h2>Iniciar sesión</h2>
 
-
         <form id="loginForm">
 
             <div>
-
                 <label>Correo electrónico</label>
 
                 <input
@@ -47,12 +36,9 @@
                     placeholder="correo@ejemplo.com"
                     required
                 >
-
             </div>
 
-
             <div>
-
                 <label>Contraseña</label>
 
                 <input
@@ -61,28 +47,17 @@
                     placeholder="Contraseña"
                     required
                 >
-
             </div>
 
-
-            <button
-                type="submit"
-                class="btn">
-
+            <button type="submit" class="btn">
                 INGRESAR
-
             </button>
 
         </form>
 
-
         <p
             id="loginError"
-            style="
-                margin-top:20px;
-                text-align:center;
-                font-weight:bold;
-            ">
+            style="margin-top:20px;text-align:center;font-weight:bold;">
         </p>
 
     </section>
@@ -90,12 +65,14 @@
 </main>
 
 
+<!-- SUPABASE -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 
 <script>
 
-console.log("1. JavaScript cargado");
+console.log("PASO 1: JavaScript funcionando");
 
 
 const SUPABASE_URL =
@@ -106,7 +83,7 @@ const SUPABASE_KEY =
     "sb_publishable_4XzzjrO_JNsDjIiD0ttSBg_QcmkbiuN";
 
 
-console.log("2. URL:", SUPABASE_URL);
+console.log("PASO 2: URL correcta");
 
 
 const supabaseClient =
@@ -116,7 +93,7 @@ const supabaseClient =
     );
 
 
-console.log("3. Supabase conectado");
+console.log("PASO 3: Supabase conectado");
 
 
 const loginForm =
@@ -129,11 +106,11 @@ const loginError =
 
 loginForm.addEventListener(
     "submit",
-    async function(e) {
+    async function(event) {
 
-        e.preventDefault();
+        event.preventDefault();
 
-        console.log("4. BOTÓN INGRESAR PRESIONADO");
+        console.log("PASO 4: BOTÓN PRESIONADO");
 
 
         const email =
@@ -150,97 +127,63 @@ loginForm.addEventListener(
 
 
         console.log(
-            "5. Correo:",
+            "PASO 5: CORREO =",
             email
         );
 
 
+        loginError.textContent =
+            "⏳ Verificando...";
+
+
+        const resultado =
+            await supabaseClient.auth.signInWithPassword({
+                email: email,
+                password: password
+            });
+
+
         console.log(
-            "6. Intentando conectar con Supabase..."
+            "PASO 6: RESPUESTA SUPABASE",
+            resultado
+        );
+
+
+        if (resultado.error) {
+
+            console.error(
+                "ERROR:",
+                resultado.error
+            );
+
+            loginError.textContent =
+                "❌ " +
+                resultado.error.message;
+
+            return;
+        }
+
+
+        console.log(
+            "PASO 7: LOGIN CORRECTO"
         );
 
 
         loginError.textContent =
-            "⏳ Conectando...";
+            "✅ Acceso correcto";
 
 
-        const {
-            data,
-            error
-        } =
-            await supabaseClient
-                .auth
-                .signInWithPassword({
+        setTimeout(function() {
 
-                    email: email,
+            window.location.href =
+                "index.html";
 
-                    password: password
-
-                });
-
-
-        console.log(
-            "7. RESPUESTA SUPABASE"
-        );
-
-
-        console.log(
-            "DATA:",
-            data
-        );
-
-
-        console.log(
-            "ERROR:",
-            error
-        );
-
-
-        if (error) {
-
-            loginError.textContent =
-                "❌ " + error.message;
-
-            return;
-
-        }
-
-
-        if (!data.session) {
-
-            loginError.textContent =
-                "❌ No se creó la sesión.";
-
-            return;
-
-        }
-
-
-        loginError.textContent =
-            "✅ LOGIN CORRECTO";
-
-
-        console.log(
-            "8. SESIÓN CORRECTA"
-        );
-
-
-        setTimeout(
-            function() {
-
-                window.location.href =
-                    "index.html";
-
-            },
-            1000
-        );
+        }, 1000);
 
     }
-
 );
 
 </script>
-
 
 </body>
 
